@@ -1,6 +1,6 @@
 package gui.attus.backend.entities;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,9 +19,9 @@ import lombok.Setter;
 public class Pessoa {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String nomeCompleto;
-    private Date dataNascimento;
+    private LocalDate dataNascimento;
 }

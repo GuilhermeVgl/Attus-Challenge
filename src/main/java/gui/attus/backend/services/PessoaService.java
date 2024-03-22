@@ -18,15 +18,27 @@ public class PessoaService {
         return pessoaRepository.findAll();
     }
 
-    public Optional<Pessoa> getPessoa(Long id) {
+    public Optional<Pessoa> consultarPessoa(Long id) {
         return pessoaRepository.findById(id);
     }
 
-    public void editarPessoa(Pessoa pessoa){
-        this.pessoaRepository.save(pessoa);
-   }
+    public Pessoa editarPessoa(Long id, Pessoa pessoaEditada) {
+        Optional<Pessoa> pessoaEncontrada = pessoaRepository.findById(id);
+        if (pessoaEncontrada.isPresent()) {
+            Pessoa pessoa = pessoaEncontrada.get();
+            pessoa.setNomeCompleto(pessoaEditada.getNomeCompleto());
+            pessoa.setDataNascimento(pessoaEditada.getDataNascimento());
+            return pessoaRepository.save(pessoa);
+        }
 
-   public void criarPessoa(Pessoa pessoa){
-       this.pessoaRepository.save(pessoa);
-   }
+        throw new IllegalArgumentException("Pessoa não encontrada com o ID fornecido: " + id);
+    }
+
+    public Pessoa criarPessoa(Pessoa pessoa){
+        // Verifica duplicidade!
+        if (pessoaRepository.existsByNomeCompletoAndDataNascimento(pessoa.getNomeCompleto(), pessoa.getDataNascimento())) {
+            throw new RuntimeException("Pessoa já cadastrada");
+        }
+        return pessoaRepository.save(pessoa);
+    }
 }
