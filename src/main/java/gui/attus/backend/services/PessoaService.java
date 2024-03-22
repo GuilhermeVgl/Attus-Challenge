@@ -24,6 +24,9 @@ public class PessoaService {
 
     public Pessoa editarPessoa(Long id, Pessoa pessoaEditada) {
         Optional<Pessoa> pessoaEncontrada = pessoaRepository.findById(id);
+        
+        this.verificaDuplicidade(pessoaEditada);
+
         if (pessoaEncontrada.isPresent()) {
             Pessoa pessoa = pessoaEncontrada.get();
             pessoa.setNomeCompleto(pessoaEditada.getNomeCompleto());
@@ -36,9 +39,13 @@ public class PessoaService {
 
     public Pessoa criarPessoa(Pessoa pessoa){
         // Verifica duplicidade!
+        this.verificaDuplicidade(pessoa);
+        return pessoaRepository.save(pessoa);
+    }
+
+    public void verificaDuplicidade(Pessoa pessoa) {
         if (pessoaRepository.existsByNomeCompletoAndDataNascimento(pessoa.getNomeCompleto(), pessoa.getDataNascimento())) {
             throw new RuntimeException("Pessoa já cadastrada");
         }
-        return pessoaRepository.save(pessoa);
     }
 }
